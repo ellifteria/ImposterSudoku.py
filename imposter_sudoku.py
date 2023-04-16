@@ -51,31 +51,16 @@ def solve_puzzle(grid, row, col):
 
     return False
 
-color_map = {
-    'Y': "yellow",
-    'R': "red",
-    'W': "white",
-    'I': "pink",
-    'P': "purple",
-    'B': "black",
-    'N': "brown",
-    'E': "blue",
-    'C': "cyan",
-    'O': "orange",
-    'L': "lime"
-}
+import csv
 
-orig_grid ="""
-Y-R-WIP-B
--N-------
--PEN-----
-P--YB--IW
-RYW-E---N
--I---W-CY
--W-C-OY-R
-NO--IL-WP
-B----Y--I
-"""
+lines = []
+
+with open("test_grid.csv") as csvfile:
+    reader = csv.reader(csvfile, delimiter=',')
+    for row in reader:
+        lines.append(''.join(row))
+
+orig_grid = '\n'.join(lines)
 
 all_colors = []
 
@@ -110,7 +95,7 @@ for first_color_index in range(len(all_colors)):
         curr_grid = curr_grid.replace(first_color, '0')
         curr_grid = curr_grid.replace(second_color, '0')
         curr_grid = curr_grid.replace('-', '0')
-        grid_split = curr_grid.split('\n')[1 : -1]
+        grid_split = curr_grid.split('\n')
 
         grid = []
 
