@@ -1,9 +1,20 @@
-grid_size = 9
+import argparse
+
+parser = argparse.ArgumentParser(
+    prog='imposter_sudoku.py',
+    description='Solve an imposter sudoku puzzle.'
+)
+
+parser.add_argument('path', help='path to the imposter sudoku puzzle csv file')
+
+args = parser.parse_args()
+
+GRID_SIZE = 9
 def print_puzzle(a):
     print(' ' * 6, '|', ' ' * 5, '|')
-    for i in range(grid_size):
+    for i in range(GRID_SIZE):
         print(end=" ")
-        for j in range(grid_size):
+        for j in range(GRID_SIZE):
             if j > 0 and j % 3 == 0: print("| ", end = "")
             print(a[i][j],end = " ")
         print()
@@ -30,17 +41,17 @@ def solve(grid, row, col, num):
     return True
  
 def solve_puzzle(grid, row, col):
-    if (row == grid_size - 1 and col == grid_size):
+    if (row == GRID_SIZE - 1 and col == GRID_SIZE):
         return True
     
-    if col == grid_size:
+    if col == GRID_SIZE:
         row += 1
         col = 0
 
     if grid[row][col] > 0:
         return solve_puzzle(grid, row, col + 1)
     
-    for num in range(1, grid_size + 1, 1): 
+    for num in range(1, GRID_SIZE + 1, 1): 
         if solve(grid, row, col, num):
             grid[row][col] = num
 
@@ -55,7 +66,7 @@ import csv
 
 lines = []
 
-with open("test_grid.csv") as csvfile:
+with open(args.path) as csvfile:
     reader = csv.reader(csvfile, delimiter=',')
     for row in reader:
         lines.append(''.join(row))
