@@ -1,4 +1,5 @@
 import argparse
+import csv
 
 parser = argparse.ArgumentParser(
     prog='imposter_sudoku.py',
@@ -62,8 +63,6 @@ def solve_puzzle(grid, row, col):
 
     return False
 
-import csv
-
 lines = []
 
 with open(args.path) as csvfile:
@@ -73,38 +72,38 @@ with open(args.path) as csvfile:
 
 orig_grid = '\n'.join(lines)
 
-all_colors = []
+all_characters = []
 
 for i in range(len(orig_grid)):
-    color = orig_grid[i]
-    if color not in all_colors:
-        all_colors.append(color)
+    character = orig_grid[i]
+    if character not in all_characters:
+        all_characters.append(character)
 
-all_colors.remove('-')
-all_colors.remove('\n')
+all_characters.remove('-')
+all_characters.remove('\n')
 
-for first_color_index in range(len(all_colors)):
-    first_color = all_colors[first_color_index]
-    for second_color_index in range(first_color_index + 1, len(all_colors)):
-        second_color = all_colors[second_color_index]
+for first_character_index in range(len(all_characters)):
+    first_character = all_characters[first_character_index]
+    for second_character_index in range(first_character_index + 1, len(all_characters)):
+        second_character = all_characters[second_character_index]
 
-        all_colors_set = set(all_colors)
+        all_characters_set = set(all_characters)
 
         curr_grid = orig_grid
-        curr_colors = all_colors_set - {first_color, second_color}
+        curr_characters = all_characters_set - {first_character, second_character}
 
         num = 1
-        color2num = {}
-        num2color = {}
+        character2num = {}
+        num2character = {}
 
-        for color_again in curr_colors:
-            color2num[color_again] = num
-            num2color[num] = color_again
-            curr_grid = curr_grid.replace(color_again, str(num))
+        for character_again in curr_characters:
+            character2num[character_again] = num
+            num2character[num] = character_again
+            curr_grid = curr_grid.replace(character_again, str(num))
             num += 1
 
-        curr_grid = curr_grid.replace(first_color, '0')
-        curr_grid = curr_grid.replace(second_color, '0')
+        curr_grid = curr_grid.replace(first_character, '0')
+        curr_grid = curr_grid.replace(second_character, '0')
         curr_grid = curr_grid.replace('-', '0')
         grid_split = curr_grid.split('\n')
 
@@ -119,10 +118,10 @@ for first_color_index in range(len(all_colors)):
         if (solve_puzzle(grid, 0, 0)):
             for row in range(len(grid)):
                 for col in range(len(grid)):
-                    grid[row][col] = num2color[grid[row][col]]
+                    grid[row][col] = num2character[grid[row][col]]
 
-            print(f"\nSolution found for imposters: {first_color}, {second_color}!")
+            print(f"\nSolution found for imposters: {first_character}, {second_character}!")
             print_puzzle(grid)
             print()
         else:
-            print(f"Solution not found for imposters: {first_color}, {second_color}. They are not the imposters.")
+            print(f"Solution not found for imposters: {first_character}, {second_character}. They are not the imposters.")
