@@ -82,6 +82,10 @@ for i in range(len(orig_grid)):
 all_characters.remove('-')
 all_characters.remove('\n')
 
+if len(all_characters) != GRID_SIZE + 2:
+    print("Invalid puzzle. Number of characters in the puzzle is not two more than the grid size.")
+    exit(1)
+
 for first_character_index in range(len(all_characters)):
     first_character = all_characters[first_character_index]
     for second_character_index in range(first_character_index + 1, len(all_characters)):
