@@ -83,13 +83,13 @@ for i in range(len(orig_grid)):
 all_characters.remove('-')
 all_characters.remove('\n')
 
-if len(all_characters) != GRID_SIZE + 2:
-    print("Invalid puzzle. Number of characters in the puzzle is not two more than the grid size.")
+if len(all_characters) <= GRID_SIZE:
+    print("Invalid puzzle. Number of characters in the puzzle is less than or equal to the grid size. There must be at least one imposter in a valid puzzle.")
     exit(1)
 
 all_characters = set(all_characters)
 
-character_combinations = map(set, itertools.combinations(all_characters, 2))
+character_combinations = map(set, itertools.combinations(all_characters, len(all_characters) - 9))
 for character_combination in character_combinations:
     curr_characters = all_characters - character_combination
 
