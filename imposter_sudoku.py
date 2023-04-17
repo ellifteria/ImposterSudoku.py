@@ -1,5 +1,6 @@
 import argparse
 import csv
+import itertools
 
 parser = argparse.ArgumentParser(
     prog='imposter_sudoku.py',
@@ -86,46 +87,44 @@ if len(all_characters) != GRID_SIZE + 2:
     print("Invalid puzzle. Number of characters in the puzzle is not two more than the grid size.")
     exit(1)
 
-for first_character_index in range(len(all_characters)):
-    first_character = all_characters[first_character_index]
-    for second_character_index in range(first_character_index + 1, len(all_characters)):
-        second_character = all_characters[second_character_index]
+all_characters = set(all_characters)
 
-        all_characters_set = set(all_characters)
+character_combinations = map(set, itertools.combinations(all_characters, 2))
+for character_combination in character_combinations:
+    curr_characters = all_characters - character_combination
 
-        curr_grid = orig_grid
-        curr_characters = all_characters_set - {first_character, second_character}
+    curr_grid = orig_grid
 
-        num = 1
-        character2num = {}
-        num2character = {}
+    num = 1
+    character2num = {}
+    num2character = {}
 
-        for character_again in curr_characters:
-            character2num[character_again] = num
-            num2character[num] = character_again
-            curr_grid = curr_grid.replace(character_again, str(num))
-            num += 1
+    for character_again in curr_characters:
+        character2num[character_again] = num
+        num2character[num] = character_again
+        curr_grid = curr_grid.replace(character_again, str(num))
+        num += 1
 
-        curr_grid = curr_grid.replace(first_character, '0')
-        curr_grid = curr_grid.replace(second_character, '0')
-        curr_grid = curr_grid.replace('-', '0')
-        grid_split = curr_grid.split('\n')
+    for character in list(character_combination):
+        curr_grid = curr_grid.replace(character, '0')
+    curr_grid = curr_grid.replace('-', '0')
+    grid_split = curr_grid.split('\n')
 
-        grid = []
+    grid = []
 
-        for line in grid_split:
-            row = []
-            for character in line:
-                row.append(int(character))
-            grid.append(row)
+    for line in grid_split:
+        row = []
+        for character in line:
+            row.append(int(character))
+        grid.append(row)
 
-        if (solve_puzzle(grid, 0, 0)):
-            for row in range(len(grid)):
-                for col in range(len(grid)):
-                    grid[row][col] = num2character[grid[row][col]]
+    if (solve_puzzle(grid, 0, 0)):
+        for row in range(len(grid)):
+            for col in range(len(grid)):
+                grid[row][col] = num2character[grid[row][col]]
 
-            print(f"\nSolution found for imposters: {first_character}, {second_character}!")
-            print_puzzle(grid)
-            print()
-        else:
-            print(f"Solution not found for imposters: {first_character}, {second_character}. They are not the imposters.")
+        print(f"\nSolution found for imposters: {character_combination}!")
+        print_puzzle(grid)
+        print()
+    else:
+        print(f"Solution not found for imposters: {character_combination}. They are not the imposters.")
